@@ -11,3 +11,5 @@ I have done a lot of the work for you here you still have to do a few things; na
 
 When you have written this code and run the code a graph showing the histogram with suitable error bars on each of the bars in this is produced.  Look at the code that I have written in `main.py` and try to understand how it works.  We are only using ideas about 
 percentiles that you have learned about in this course.  It is a little more complicated, however, as we have to use two dimensional NumPy arrays as we are estimating multiple random variables simultaneously.
+
+Please note that the code checks the values of the error bars that are stored in the arrays called lower and upper.  You must therefore have these arrays defined in your code in order to pass the test
