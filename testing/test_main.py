@@ -7,20 +7,12 @@ except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "AutoFeedback"])
     from AutoFeedback.plotchecks import check_plot
 
+from AutoFeedback.varchecks import check_vars
 from AutoFeedback.plotclass import line
 from AutoFeedback.funcchecks import check_func
 from AutoFeedback.randomclass import randomvar
 import unittest
 from main import *
-
-class errclass : 
-   def get_lower(i) : 
-       from scipy.stats import norm
-       return ( lower[i] / norm.ppf(0.05) )**2
-
-   def get_upper(i) :
-       from scipy.stats import norm
-       return ( upper[i] / norm.ppf(0.95) )**2
 
 class UnitTests(unittest.TestCase) :
     def test_dice(self) : 
@@ -40,20 +32,14 @@ class UnitTests(unittest.TestCase) :
         assert( check_func("histo_estimate", inputs, variables, calls=["dice_roll"] ) )      
 
     def test_lower(self) :
-        inputs, variables = [], []
-        for i in range(6) :
-            inputs.append((i,))
-            myvar = randomvar( 1/6, dist="chi2", variance=(1/6)*(5/6)/nsamples, isinteger=False)
-            variables.append( myvar )
-        assert( check_func("get_lower", inputs, variables, modname=errclass ) ) 
+        probs, isi = 1/6*np.ones(6), [False,False,False,False,False,False]
+        myvar = randomvar( probs, dist="chi2", variance=probs*(1-probs)/nsamples, dof=nsamples-1, limit=0.9, isinteger=isi)
+        assert( check_vars("lower", myvar) ) 
 
     def test_upper(self) :
-        inputs, variables = [], [] 
-        for i in range(6) :
-            inputs.append((i,))
-            myvar = randomvar( 1/6, dist="chi2", variance=(1/6)*(5/6)/nsamples, isinteger=False)
-            variables.append( myvar )
-        assert( check_func("get_upper", inputs, variables, modname=errclass ) )  
+        probs, isi = 1/6*np.ones(6), [False,False,False,False,False,False]
+        myvar = randomvar( probs, dist="chi2", variance=probs*(1-probs)/nsamples, dof=nsamples-1, limit=0.9, isinteger=isi)
+        assert( check_vars("upper", myvar) )  
 
     def test_plot(self) :
         x = np.linspace(1,6,6)
