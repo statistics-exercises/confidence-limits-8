@@ -7,17 +7,12 @@ except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "AutoFeedback"])
     from AutoFeedback.plotchecks import check_plot
 
+from AutoFeedback.varchecks import check_vars
 from AutoFeedback.plotclass import line
 from AutoFeedback.funcchecks import check_func
 from AutoFeedback.randomclass import randomvar
 import unittest
 from main import *
-
-x = np.linspace(1,6,6)
-var = randomvar( 1/6, variance=(1/6)*(5/6)/(nresamples*nsamples), vmin=0, vmax=1, isinteger=False ) 
-line1=line( x, var )
-
-axislabels=["Outcome", "Fraction of occurances"]
 
 class UnitTests(unittest.TestCase) :
     def test_dice(self) : 
@@ -36,5 +31,19 @@ class UnitTests(unittest.TestCase) :
             variables.append( myvar )
         assert( check_func("histo_estimate", inputs, variables, calls=["dice_roll"] ) )      
 
+    def test_lower(self) :
+        probs, isi = 1/6*np.ones(6), [False,False,False,False,False,False]
+        myvar = randomvar( probs, dist="chi2", variance=probs*(1-probs)/nsamples, dof=nsamples-1, limit=0.9, isinteger=isi)
+        assert( check_vars("lower", myvar) ) 
+
+    def test_upper(self) :
+        probs, isi = 1/6*np.ones(6), [False,False,False,False,False,False]
+        myvar = randomvar( probs, dist="chi2", variance=probs*(1-probs)/nsamples, dof=nsamples-1, limit=0.9, isinteger=isi)
+        assert( check_vars("upper", myvar) )  
+
     def test_plot(self) :
+        x = np.linspace(1,6,6)
+        var = randomvar( 1/6, variance=(1/6)*(5/6)/(nresamples*nsamples), vmin=0, vmax=1, isinteger=False )
+        line1=line( x, var )
+        axislabels=["Outcome", "Fraction of occurances"] 
         assert(check_plot([line1],exppatch=line1,explabels=axislabels,explegend=False,output=True))
