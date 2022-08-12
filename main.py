@@ -14,10 +14,10 @@ def histo_estimate(n) :
   
   return histo / n
   
-# This tells us that 200 (nsamples) random variables should be used in the generation of each histogram
-# This procedure of generating 200 random variables and calculating the histogram should then 
-# be repeated 100 (nresamples) times.
-nsamples, nresamples = 200, 100
+# This tells us that 50 (nsamples) random variables should be used in the generation of each histogram
+# This procedure of generating 50 random variables and calculating the histogram should then 
+# be repeated 500 (nresamples) times.
+nsamples, nresamples = 50, 500
 # This loop resamples your histogram
 histo_samples = np.zeros([nresamples,6]) 
 for i in range(nresamples) : histo_samples[i] = histo_estimate(nsamples)
