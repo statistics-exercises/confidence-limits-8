@@ -42,8 +42,8 @@ class UnitTests(unittest.TestCase) :
         assert( check_vars("upper", myvar) )  
 
     def test_plot(self) :
-        x = np.linspace(1,6,6)
-        var = randomvar( 1/6, variance=(1/6)*(5/6)/(nresamples*nsamples), vmin=0, vmax=1, isinteger=False )
+        probs, x, isi = 1/6*np.ones(6), np.linspace(1,6,6), [False,False,False,False,False,False]
+        var = randomvar( probs, variance=probs*(1-probs)/nsamples, vmin=[0,0,0,0,0,0], vmax=[1,1,1,1,1,1], isinteger=isi )
         line1=line( x, var )
         axislabels=["Outcome", "Fraction of occurances"] 
         assert(check_plot([line1],exppatch=line1,explabels=axislabels,explegend=False,output=True))
